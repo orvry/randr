@@ -29,6 +29,7 @@ export default function RsvpSection() {
       email: f.get("email").trim(),
       phone: (f.get("phone") || "").trim() || null,
       attendance: f.get("attending"),
+      token: new URLSearchParams(window.location.search).get("token") || "",
       allergies: declined ? [] : f.getAll("allergy"),
       dietary_requirements: declined
         ? null
@@ -37,26 +38,28 @@ export default function RsvpSection() {
     };
 
     setSending(true);
-    let res;
     try {
-      res = await fetch("/api/rsvp", {
+      const res = await fetch("/api/rsvp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+      const result = await res.json();
+      if (!res.ok) {
+        setStatus(
+          res.status === 503
+            ? "RSVP isn’t connected yet. Add your Supabase keys to .env.local and restart."
+            : result.error ||
+                "Something went wrong. Please try again in a moment.",
+        );
+        return;
+      }
+      setDone({ declined, first: payload.guest_name.split(" ")[0] });
     } catch {
-      res = null;
+      setStatus("Something went wrong. Please try again in a moment.");
+    } finally {
+      setSending(false);
     }
-    setSending(false);
-    if (!res || !res.ok) {
-      setStatus(
-        res && res.status === 503
-          ? "RSVP isn’t connected yet. Add your Supabase keys to .env.local and restart."
-          : "Something went wrong. Please try again in a moment.",
-      );
-      return;
-    }
-    setDone({ declined, first: payload.guest_name.split(" ")[0] });
   }
 
   return (

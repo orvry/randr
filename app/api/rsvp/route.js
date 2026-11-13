@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createHash } from "node:crypto";
 import { getAdminClient } from "../../../lib/supabase-admin";
 
 export const runtime = "nodejs";
@@ -12,6 +13,21 @@ export async function POST(request) {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+  }
+
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+  }
+
+  const token = clean(body.token, 200);
+  if (!token) {
+    return NextResponse.json(
+      {
+        error:
+          "This RSVP link is missing, invalid, expired, or already used. Please request another link from the couple.",
+      },
+      { status: 403 },
+    );
   }
 
   const name = clean(body.guest_name, 120);
@@ -48,10 +64,23 @@ export async function POST(request) {
   if (!supabase)
     return NextResponse.json({ error: "Not configured" }, { status: 503 });
 
-  const { error } = await supabase.from("rsvps").insert(row);
+  const tokenHash = createHash("sha256").update(token).digest("hex");
+  const { data: accepted, error } = await supabase.rpc("submit_rsvp_once", {
+    p_token_hash: tokenHash,
+    p_rsvp: row,
+  });
   if (error) {
-    console.error("RSVP insert failed:", error.message);
+    console.error("RSVP submission failed:", error.message);
     return NextResponse.json({ error: "Could not save" }, { status: 500 });
+  }
+  if (!accepted) {
+    return NextResponse.json(
+      {
+        error:
+          "This RSVP link is missing, invalid, expired, or already used. Please request another link from the couple.",
+      },
+      { status: 403 },
+    );
   }
   return NextResponse.json({ ok: true });
 }
