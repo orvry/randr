@@ -12,8 +12,7 @@ function isAuthorized(request, configuredKey) {
   const provided = Buffer.from(providedKey);
   const expected = Buffer.from(configuredKey);
   return (
-    provided.length === expected.length &&
-    timingSafeEqual(provided, expected)
+    provided.length === expected.length && timingSafeEqual(provided, expected)
   );
 }
 
@@ -22,7 +21,10 @@ function parseGuests(input) {
     return { error: "Enter guests as one “Name, email” pair per line." };
   }
 
-  const lines = input.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  const lines = input
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
   if (!lines.length) {
     return { error: "Enter at least one guest." };
   }
@@ -42,8 +44,16 @@ function parseGuests(input) {
     }
 
     const name = line.slice(0, comma).trim();
-    const email = line.slice(comma + 1).trim().toLowerCase();
-    if (!name || name.length > 120 || email.length > 254 || !EMAIL_PATTERN.test(email)) {
+    const email = line
+      .slice(comma + 1)
+      .trim()
+      .toLowerCase();
+    if (
+      !name ||
+      name.length > 120 ||
+      email.length > 254 ||
+      !EMAIL_PATTERN.test(email)
+    ) {
       lineErrors.push(index + 1);
       continue;
     }
@@ -268,14 +278,20 @@ async function sendInvitationBatch(apiKey, emails) {
 export async function POST(request) {
   const adminKey = process.env.ADMIN_ACCESS_KEY;
   if (!adminKey) {
-    return NextResponse.json({ error: "Admin access is not configured" }, {
-      status: 503,
-    });
+    return NextResponse.json(
+      { error: "Admin access is not configured" },
+      {
+        status: 503,
+      },
+    );
   }
   if (!isAuthorized(request, adminKey)) {
-    return NextResponse.json({ error: "Admin key is incorrect" }, {
-      status: 401,
-    });
+    return NextResponse.json(
+      { error: "Admin key is incorrect" },
+      {
+        status: 401,
+      },
+    );
   }
 
   let body;
@@ -290,7 +306,11 @@ export async function POST(request) {
 
   const expiresAt =
     typeof body.expires_at === "string" ? new Date(body.expires_at) : null;
-  if (!expiresAt || Number.isNaN(expiresAt.getTime()) || expiresAt <= new Date()) {
+  if (
+    !expiresAt ||
+    Number.isNaN(expiresAt.getTime()) ||
+    expiresAt <= new Date()
+  ) {
     return NextResponse.json(
       { error: "Choose a validity date in the future" },
       { status: 400 },
@@ -314,7 +334,10 @@ export async function POST(request) {
   const siteOrigin = getSiteOrigin();
   if (!siteOrigin) {
     return NextResponse.json(
-      { error: "Set SITE_URL to the public website URL before sending invitations" },
+      {
+        error:
+          "Set SITE_URL to the public website URL before sending invitations",
+      },
       { status: 503 },
     );
   }
@@ -330,7 +353,7 @@ export async function POST(request) {
     const tokenHash = createHash("sha256").update(token).digest("hex");
     const link = new URL(baseUrl);
     link.searchParams.set("token", token);
-    link.hash = "rsvp";
+    //link.hash = "rsvp";
 
     return {
       guest,
