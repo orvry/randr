@@ -65,24 +65,23 @@ export default function RsvpSection() {
       <Reveal className="content rsvp-grid">
         <div>
           <div className="eyebrow" style={{ color: "#e6bf99" }}>
-            The next chapter starts here
+            We Saved You a Seat
           </div>
           <h2>
-            <Words>And then,</Words>{" "}
-            <em>
-              <Words start={2}>we do.</Words>
-            </em>
+            <Words>And we hope you'll be there.</Words>{" "}
           </h2>
           <p className="lead">
-            We’d love for you to be there when our garden of two becomes a
-            gathering of everyone we love.
+            Our story wouldn't be complete without the people we love. We'd be
+            delighted to have you join us as we celebrate our wedding day. Let
+            us know if you'll be there to share the laughter, the memories, and
+            the beginning of our forever.
           </p>
         </div>
 
         <div>
           <div className="meta">
             <div>
-              <small>When</small>Sunday · 3:00 PM
+              <small>When</small>Sunday · 5:00 PM
             </div>
             <div>
               <small>Where</small>Metro Manila, Philippines
