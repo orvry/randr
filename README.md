@@ -34,8 +34,12 @@ alter table rsvps enable row level security;  -- no public policies: only the se
 Push to GitHub and import into Vercel. Add `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in the project settings.
 
 ## Where things are
-- `app/globals.css` – colours (`#DFDED9`, `#5F6831`, `#9A7A54`), layout, mobile blur
-- `components/ZoomScenes.jsx` – pinned zoom sequence (change copy and details here)
-- `components/RsvpSection.jsx` – the RSVP form
-- `app/api/rsvp/route.js` – server route that validates and saves RSVPs
-- `components/GardenDefs.jsx` – baby's breath / leaf artwork
+- `lib/story.js` – all story text and photo paths. Text in [brackets] is a placeholder and shows highlighted until replaced
+- `public/photos/` – drop your photos here (file names listed in the README inside)
+- `components/Hero.jsx` (GSAP) · `Couple.jsx` (Framer Motion) · `Polaroids.jsx` (GSAP, pinned) · `Adventures.jsx` (GSAP, pinned horizontal reel) · `Proposal.jsx` (GSAP, pinned) · `Invitation.jsx` (CSS + Framer Motion)
+- `components/Garnish.jsx` (swaying baby’s breath) · `components/Owl.jsx` (owl accents)
+- `components/ChapterNav.jsx` – chapter dots on the right
+- `components/RsvpSection.jsx` + `app/api/rsvp/route.js` – RSVP form and server-side save
+- `app/globals.css` – palette (olive `#5F6831`, tan `#9A7A54`, ivory, champagne) and all layout
+
+Phones get shorter pins, and the adventure reel becomes a normal swipe row. With "reduce motion" on, every chapter is a static layout.

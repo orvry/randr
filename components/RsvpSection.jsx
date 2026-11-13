@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Drift from "./Drift";
+import Owl from "./Owl";
 import Reveal from "./Reveal";
 import Words from "./Words";
 
@@ -25,12 +26,12 @@ export default function RsvpSection() {
     const f = new FormData(form);
     const declined = f.get("attending") === "decline";
     const payload = {
-      guest_name: f.get("name").trim(),
+      name: f.get("name").trim(),
       email: f.get("email").trim(),
       phone: (f.get("phone") || "").trim() || null,
-      attendance: f.get("attending"),
+      attending: f.get("attending"),
       allergies: declined ? [] : f.getAll("allergy"),
-      dietary_requirements: declined
+      dietary_notes: declined
         ? null
         : (f.get("dietary_notes") || "").trim() || null,
       message: (f.get("message") || "").trim() || null,
@@ -56,7 +57,7 @@ export default function RsvpSection() {
       );
       return;
     }
-    setDone({ declined, first: payload.guest_name.split(" ")[0] });
+    setDone({ declined, first: payload.name.split(" ")[0] });
   }
 
   return (
@@ -64,25 +65,25 @@ export default function RsvpSection() {
       <Drift count={14} />
       <Reveal className="content rsvp-grid">
         <div>
-          <div className="eyebrow" style={{ color: "#e6bf99" }}>
-            The next chapter starts here
-          </div>
           <h2>
-            <Words>And then,</Words>{" "}
+            <Words>We Saved You</Words>{" "}
             <em>
-              <Words start={2}>we do.</Words>
+              <Words start={3}>a Seat</Words>
             </em>
           </h2>
+          <p className="rsvp-sub">And we hope you’ll be there.</p>
           <p className="lead">
-            We’d love for you to be there when our garden of two becomes a
-            gathering of everyone we love.
+            Our story wouldn’t be complete without the people we love. We’d be
+            delighted to have you join us as we celebrate our wedding day. Let
+            us know if you’ll be there to share the laughter, the memories, and
+            the beginning of our forever.
           </p>
         </div>
 
         <div>
           <div className="meta">
             <div>
-              <small>When</small>Sunday · 3:00 PM
+              <small>When</small>Sunday · 5:00 PM
             </div>
             <div>
               <small>Where</small>Metro Manila, Philippines
@@ -90,6 +91,7 @@ export default function RsvpSection() {
           </div>
 
           <div className="rsvp-card">
+            <Owl className="rsvp-owl" />
             <button
               type="button"
               className="card-head"

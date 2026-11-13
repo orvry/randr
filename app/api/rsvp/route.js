@@ -14,9 +14,9 @@ export async function POST(request) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 
-  const name = clean(body.guest_name, 120);
+  const name = clean(body.name, 120);
   const email = clean(body.email, 200);
-  const attending = body.attendance;
+  const attending = body.attending;
   if (
     !name ||
     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
@@ -40,7 +40,7 @@ export async function POST(request) {
         : body.allergies.filter((a) => ALLERGIES.includes(a)),
     dietary_requirements: declined
       ? null
-      : clean(body.dietary_requirements, 1000) || null,
+      : clean(body.dietary_notes, 1000) || null,
     message: clean(body.message, 2000) || null,
   };
 

@@ -1,7 +1,8 @@
-import { Fraunces, DM_Sans } from 'next/font/google';
+import { Fraunces, DM_Sans, Caveat } from 'next/font/google';
 import './globals.css';
 
 const fraunces = Fraunces({ subsets: ['latin'], variable: '--font-fraunces', display: 'swap' });
+const caveat = Caveat({ subsets: ['latin'], variable: '--font-hand', display: 'swap' });
 const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-dm', display: 'swap' });
 
 export const metadata = {
@@ -13,7 +14,7 @@ export const viewport = { width: 'device-width', initialScale: 1, viewportFit: '
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${dmSans.variable}`}>
+    <html lang="en" className={`${fraunces.variable} ${dmSans.variable} ${caveat.variable}`}>
       <body>{children}</body>
     </html>
   );
