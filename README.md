@@ -12,7 +12,7 @@ npm run dev                  # http://localhost:3000
 The form posts to `/api/rsvp`, a server route that saves to Supabase with the **service role key**.
 That key bypasses Row Level Security, so it must stay on the server:
 never prefix it with `NEXT_PUBLIC_`, never commit `.env.local`, and add it in Vercel as a normal (non-public) variable.
-Open `/admin` to email invitation links to multiple guests. Set a long random `ADMIN_ACCESS_KEY` in the server environment and enter it on that page; the key is not stored in the browser. Enter one guest per line as `Name, email`, choose an expiry date, and send. Each guest receives a unique link stored as a SHA-256 token hash; it can only be used for one successful RSVP. Email is sent with Resend, so configure `RESEND_API_KEY` and `INVITATION_FROM_EMAIL` with an address on a verified Resend domain.
+Open `/admin` to email invitation links to multiple guests. Set a long random `ADMIN_ACCESS_KEY` in the server environment and enter it on that page; the key is not stored in the browser. Enter one guest per line as `Name, email`, choose an expiry date, and send. Each guest receives a unique link stored as a SHA-256 token hash; it can only be used for one successful RSVP. Email is sent with Resend, so configure `RESEND_API_KEY` and `INVITATION_FROM_EMAIL` with an address on a verified Resend domain. Set `SITE_URL` to the public origin of the website (for example, `https://russelle-and-rosie.com`); it is used to build invitation links rather than relying on proxy request URLs.
 
 ## Supabase table
 Run this in the Supabase SQL editor. If you already created `rsvps` using the previous version of this README, first rename its columns to match the server:
@@ -90,7 +90,7 @@ grant execute on function public.submit_rsvp_once(text, jsonb) to service_role;
 The token update and RSVP insert run in one database transaction: a failed insert does not consume the link, and concurrent/repeated submissions cannot reuse it.
 
 ## Deploy
-Push to GitHub and import into Vercel. Add `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_ACCESS_KEY`, `RESEND_API_KEY`, and `INVITATION_FROM_EMAIL` in the project settings.
+Push to GitHub and import into Vercel. Add `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_ACCESS_KEY`, `RESEND_API_KEY`, `INVITATION_FROM_EMAIL`, and `SITE_URL` in the project settings.
 
 ## Where things are
 - `app/globals.css` – colours (`#DFDED9`, `#5F6831`, `#9A7A54`), layout, mobile blur
